@@ -13,6 +13,23 @@ turtlebot
 
 运行地图command：
 roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=$HOME/map.yaml​
-​
-​
-​
+
+----------blog​
+
+​简易地图 map.yaml map.pgm 保存在：
+/home/issuser
+
+-----
+
+画地图：
+​export TURTLEBOT3_MODeL=burger
+roslaunch turtlebot3_slam turtlebot3_slam.launch slam_methods:=gmapping
+
+使用键盘控制tutlebot移动
+roslaunch turtlebot3_teleop turtlebot3_teleop_key.alunch
+
+保存地图为map_room
+rosrun map_server map_saver -f ~/map
+
+查看当前坐标：
+rostopic echo /odom
