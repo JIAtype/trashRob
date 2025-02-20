@@ -33,3 +33,41 @@ rosrun map_server map_saver -f ~/map
 
 查看当前坐标：
 rostopic echo /odom
+
+
+
+
+
+
+<launch>
+    <!-- 启动ROS核心系统 -->
+    <arg name="robot_ip" default="localhost"/>
+
+    <!-- 启动TurtleBot传感器相关节点 -->
+    <include file="$(find turtlebot_bringup)/launch/minimal.launch">
+        <arg name="robot_ip" value="$(arg robot_ip)" />
+    </include>
+
+    <!-- 启动AMCL（自适应蒙特卡洛定位） -->
+    <include file="$(find turtlebot_navigation)/launch/amcl_demo.launch">
+        <arg name="map_file" value="$(find your_package)/maps/your_map.yaml" />
+    </include>
+
+    <!-- 启动move_base导航 -->
+    <node pkg="move_base" type="move_base" name="move_base" output="screen">
+        <!-- 配置参数 -->
+        <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS"/>
+        <param name="base_global_planner" value="navfn/NavfnROS"/>
+        <param name="planner_frequency" value="1.0" />
+    </node>
+
+    <!-- 启动Rviz（可视化工具） -->
+    <include file="$(find turtlebot_rviz_launchers)/launch/view_navigation.launch"/>
+
+    <!-- 启动自动移动脚本 -->
+    <node pkg="your_package" type="move_to_goal.py" name="move_to_goal" output="screen">
+        <!-- 目标位置 (x=2, y=2) 可根据需求修改 -->
+        <param name="goal_x" value="2.0"/>
+        <param name="goal_y" value="2.0"/>
+    </node>
+</launch>
